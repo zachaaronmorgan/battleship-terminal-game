@@ -58,9 +58,34 @@ class Battleship_Board():
 
 # Defines the types of ships available in the game
 class Ship():
-    def __init__(self, ship_type, health, location, is_active):
+    def __init__(self, ship_type, health, location, status):
         self.ship_type = ship_type
+        self.health = health
+        self.location = location
+        self.status = status
+
+    def __repr__(self):
+        return f"This is a {self.ship_type} located at {self.location} with {self.health} hits remaining. The current status of this ship is {self.status}" 
+        
+
+class Carrier(Ship):
+    def __init__(self, location, status):
+        super().__init__(ship_type='Carrier', health=5, location=location, status=status)
+        
+class Battleship(Ship):
+    def __init__(self, location, status):
+        super().__init__(ship_type='Battleship', health=4, location=location, status=status)
+
+class Cruiser(Ship):
+    def __init__(self, location, status):
+        super().__init__(ship_type='Cruiser', health=3, location=location, status=status)
+        
+class Submarine(Ship):
+    def __init__(self, location, status):
+        super().__init__(ship_type='Submarine', health=3, location=location, status=status)
+
+class Destroyer(Ship):
+    def __init__(self, location, status):
+        super().__init__(ship_type='Destroyer', health=2, location=location, status=status)
 
 
-label_val = 'B5'
-print(label_to_coord(label_val))
