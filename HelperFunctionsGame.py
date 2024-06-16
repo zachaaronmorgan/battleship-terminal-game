@@ -34,4 +34,11 @@ def check_orientations(size, start_position):
     
     return possible_orientations
 
-
+def multiple_choice(prompt, options):
+    keys = list(string.ascii_uppercase)
+    m_choice_opt = dict(zip(keys,options))
+    print(prompt)
+    for choice, content in m_choice_opt.items():
+        print(f"{choice}: {content}")
+    answer = input("Enter the letter of the choice you would like: ")
+    return m_choice_opt[answer]
