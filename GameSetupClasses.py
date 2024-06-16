@@ -6,23 +6,13 @@ class Battleship_Board():
     
     def __init__(self, state):
         self.state = state
-        
         self.board = np.full((11, 11), '   ')
-        
         self.board[0, 1:] = np.array([f'{i}  ' if i < 10 else f'{i} ' for i in range(1, 11)])
-        
         self.board[1:, 0] = HFG.letter_labels
-        
         self.board[0, 0] = ' '
     
     def __repr__(self):
         return f"\n{np.array2string(self.board, separator=' ')}\nThis is an {self.state} battleship board."
-        
-class Friendly_Board(Battleship_Board):
-    pass
-
-class Target_Board(Battleship_Board):
-    pass
 
 # Defines the types of ships available in the game
 class Ship():
@@ -56,17 +46,17 @@ class Player():
         self.name = name 
         self.num_ships = num_ships
         self.ships = ships
-        self.friendly_board = Friendly_Board('Active')
-        self.target_board = Target_Board('Active')
+        self.friendly_board = Battleship_Board('Active')
+        self.target_board = Battleship_Board('Active')
     
     def __repr__(self):
         return f"This player's name is {self.name}. They have an {self.friendly_board.state} friendly board and an {self.target_board.state} target board. They currently have {self.num_ships} ships remaining"
     
     def display_friendly_board(self):
-        print(self.friendly_board.board ,"\n")
+        print("This is your friendly board: \n", self.friendly_board.board ,"\n")
     
     def display_target_board(self):
-        print(self.target_board.board ,"\n")
+        print("This is your target board: \n", self.target_board.board ,"\n")
         
     def is_occupied(self, size, start_position, orientation):
         row, column = HFG.label_to_coord(start_position)
@@ -138,8 +128,10 @@ class Player():
             
         elif enemy.friendly_board.board[row, column] in [' M ', ' H ']:
             print("You have already struck here. Please select a new location")
-        
-        
+    
+    def Turn(self, enemy):
+        self.display_friendly_board()
+        self.display_target_board()
 
 
 

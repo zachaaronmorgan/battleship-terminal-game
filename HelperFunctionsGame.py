@@ -2,6 +2,15 @@
 # Helper Variables/Functions
 import string
 import numpy as np
+import os
+
+def clear_screen():
+    # Check if the operating system is Windows
+    if os.name == 'nt':
+        os.system('cls')  # For Windows
+    else:
+        os.system('clear')  # For Linux/OS X
+
 
 letter_labels = np.array(list(string.ascii_uppercase[:10])) 
 letter_labels_indices = [n for n in letter_labels]
