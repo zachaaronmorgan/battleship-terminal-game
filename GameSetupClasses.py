@@ -75,21 +75,10 @@ class Player():
         elif orientation.lower() == 'left':
             return any(self.friendly_board.board[row, column-i] != '   ' for i in range(size))
     
-    def ship_to_board(self, ship_type, start_position, orientation):
-        new_ship = create_ship(ship_type)
-        
-        if self.is_occupied(new_ship.size, start_position, orientation):
-            
-            print("Spot already filled. Please change the location of your current ship")
-            return False
-        
-        else:
-            
-            self.place_ship(new_ship, start_position, orientation)
 
-
-    def place_ship(self, ship, start_position, orientation):
+    def place_ship(self, type_ship, start_position, orientation):
         positions = []
+        ship = create_ship(type_ship)
         row, column = HFG.label_to_coord(start_position)
         
         if orientation.lower() == 'up':

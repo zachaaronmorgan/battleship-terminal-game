@@ -5,20 +5,26 @@ from HelperFunctionsGame import multiple_choice, check_orientations, clear_scree
 
 player_1 = GSP.Player('Zach')
 player_2 = GSP.Player('John')
-# ships = ['Carrier', 'Battleship', 'Cruiser', 'Submarine', 'Destroyer']
-# players = [player_1, player_2]
-# for player in players:
-#     ships_available = ships.copy()
-#     clear_screen()
-#     for ship in ships:
-#         ship_choice = multiple_choice("Which ship would you like to place: ", ships_available)
-#         ships_available.remove(ship_choice)
-#         new_ship = GSP.create_ship(ship_choice)
-#         start_position = input("Which position on the board would you like to place it: ")
-#         orientations = check_orientations(new_ship.size, start_position)
-#         chosen_orientation = multiple_choice("In which orientation would you like to place the ship: ", orientations)
-#         player.ship_to_board(ship_choice, start_position, chosen_orientation)
-#         player.display_friendly_board()
+ships = ['Carrier', 'Battleship', 'Cruiser', 'Submarine', 'Destroyer']
+players = [player_1, player_2]
+for player in players:
+    ships_available = ships.copy()
+    clear_screen()
+    for ship in ships:
+        ship_choice = multiple_choice("Which ship would you like to place: ", ships_available)
+        ships_available.remove(ship_choice)
+        new_ship = GSP.create_ship(ship_choice)
+        start_position = input("Which position on the board would you like to place it: ")
+        orientations = check_orientations(new_ship.size, start_position)
+        chosen_orientation = multiple_choice("In which orientation would you like to place the ship: ", orientations)
+        while player_1.is_occupied(new_ship.size,start_position,chosen_orientation):
+            print("This spot is occupied by another ship. Please choose a different location")
+            start_position = input("Which position on the board would you like to place it: ")
+            orientations = check_orientations(new_ship.size, start_position)
+            chosen_orientation = multiple_choice("In which orientation would you like to place the ship: ", orientations)
+            
+        player.place_ship(ship_choice, start_position, chosen_orientation)
+        player.display_friendly_board()
 
 # # player_2.ship_to_board('destroyer', 'E6', 'right')
 # # player_2.ship_to_board('carrier', 'B6', 'up')
