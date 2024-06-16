@@ -40,7 +40,7 @@ def create_ship(ship_type):
     ships = {
         'carrier': ('Carrier', 5, 'Functional', ' S '),
         'battleship': ('Battleship', 4, 'Functional', ' S '),
-        'cruiser': ('Cruiser', 3, 'Functional', 'S'),
+        'cruiser': ('Cruiser', 3, 'Functional', ' S '),
         'submarine': ('Submarine', 3, 'Functional', ' S '),
         'destroyer': ('Destroyer', 2, 'Functional', ' S ')
     }

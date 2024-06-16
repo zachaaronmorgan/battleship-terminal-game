@@ -8,8 +8,8 @@ letter_labels_indices = [n for n in letter_labels]
 number_labels = np.array(range(1, 11))  
 
 def label_to_coord(label_val):
-    row = int(label_val[1:])
-    column = letter_labels_indices.index(label_val[0])+1
+    column = int(label_val[1:])
+    row = letter_labels_indices.index(label_val[0])+1
     return row, column
 
 def check_orientations(size, start_position):
@@ -25,8 +25,8 @@ def check_orientations(size, start_position):
         }
         maximum_val, minimum_val = 10, 1
         for orientation in orientations.items():
-            if min(orientations[orientation]) >= minimum_val and max(orientations[orientation]) <= maximum_val:
-                possible_orientations.append(orientation)
+            if min(orientation[1]) >= minimum_val and max(orientation[1]) <= maximum_val:
+                possible_orientations.append(orientation[0])
             else:
                 continue
     else:
@@ -34,7 +34,7 @@ def check_orientations(size, start_position):
     
     return possible_orientations
 
-def multiple_choice(prompt, options):
+def multiple_choice(prompt: str, options: list) -> str:
     keys = list(string.ascii_uppercase)
     m_choice_opt = dict(zip(keys,options))
     print(prompt)
