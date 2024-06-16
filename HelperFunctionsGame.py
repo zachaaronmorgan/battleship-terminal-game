@@ -3,13 +3,17 @@
 import string
 import numpy as np
 import os
+import platform
 
 def clear_screen():
-    # Check if the operating system is Windows
     if os.name == 'nt':
-        os.system('cls')  # For Windows
+        
+        if 'MINGW' in platform.system() or 'CYGWIN' in platform.system():
+            os.system('clear')  
+        else:
+            os.system('cls')  
     else:
-        os.system('clear')  # For Linux/OS X
+        os.system('clear')  
 
 
 letter_labels = np.array(list(string.ascii_uppercase[:10])) 
