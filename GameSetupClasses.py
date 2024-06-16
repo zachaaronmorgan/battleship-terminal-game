@@ -1,7 +1,7 @@
 # Imports 
 import HelperFunctionsGame as HFG
 import numpy as np
-
+import pprint
 class Battleship_Board():
     
     def __init__(self, state):
@@ -9,14 +9,14 @@ class Battleship_Board():
         self.board = np.full((11, 11), '   ')
         self.board[0, 1:] = np.array([f'{i}  ' if i < 10 else f'{i} ' for i in range(1, 11)])
         self.board[1:, 0] = HFG.letter_labels
-        self.board[0, 0] = ' '
+        self.board[0, 0] = ''
     
     def __repr__(self):
         return f"\n{np.array2string(self.board, separator=' ')}\nThis is an {self.state} battleship board."
 
 # Defines the types of ships available in the game
 class Ship():
-    def __init__(self, ship_type, size, status, s='S'):
+    def __init__(self, ship_type, size, status, s):
         self.ship_type = ship_type
         self.size = size
         self.status = status
@@ -24,7 +24,7 @@ class Ship():
         self.health = size
 
     def __repr__(self):
-        return f"This is a {self.ship_type} with a size of {self.size}. The current status of this ship is {self.status}. The symbol for this ship is {self.s}" 
+        return f"The symbol for this ship is {self.s}" 
 
 def create_ship(ship_type):
     ships = {
@@ -50,7 +50,7 @@ class Player():
         self.target_board = Battleship_Board('Active')
     
     def __repr__(self):
-        return f"This player's name is {self.name}. They have an {self.friendly_board.state} friendly board and an {self.target_board.state} target board. They currently have {self.num_ships} ships remaining"
+        return f"Your player name is {self.name}. You have an {self.friendly_board.state} friendly board and an {self.target_board.state} target board. You currently have {self.num_ships} ships remaining. They are as follows: {self.ships}"
     
     def display_friendly_board(self):
         print("This is your friendly board: \n", self.friendly_board.board ,"\n")
@@ -122,5 +122,21 @@ class Player():
         self.display_friendly_board()
         self.display_target_board()
 
-
-
+    def display_ships(self):
+        for ship in self.ships.values():
+            print(ship)
+            
+    def get_ship_coordinates(self):
+        ship_coordinates = {1: [],2: [],3: [],4: [],5: []}
+        for key, ship in zip(ship_coordinates.keys(), self.ships.values()):
+            ship_coordinates[key] = ship
+        return ship_coordinates
+    
+    def remove_ships(self):
+        ship_coord = self.get_ship_coordinates()  # Retrieve ship coordinates
+        for coordinates_list in ship_coord.values():  # Loop over each list in the dictionary values
+            for coordinates in coordinates_list:  # Loop over each tuple in the list
+                if isinstance(coordinates, tuple) and len(coordinates) == 2:
+                    # Properly access the board using tuple indexing
+                    self.friendly_board.board[coordinates] = '   '  # Reset the position to the original state
+        self.ships = {}  # Reset the ships dictionary
