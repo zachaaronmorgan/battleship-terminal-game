@@ -42,10 +42,10 @@ def create_ship(ship_type):
     raise ValueError("Unknown ship type")
 
 class Player():
-    def __init__(self, name, num_ships=5, ships={}):
+    def __init__(self, name, num_ships=5, ships=None):
         self.name = name 
         self.num_ships = num_ships
-        self.ships = ships
+        self.ships = ships if ships is not None else {}
         self.friendly_board = Battleship_Board('Active')
         self.target_board = Battleship_Board('Active')
     
@@ -110,10 +110,12 @@ class Player():
         if enemy.friendly_board.board[row, column] == ' S ':
             enemy.friendly_board.board[row, column] = ' H '
             self.target_board.board[row, column] = ' H '
+            print("Nice you hit a ship!")
             
         elif enemy.friendly_board.board[row, column] == '   ':
             enemy.friendly_board.board[row,column] = ' M '
             self.target_board.board[row, column] = ' M '
+            print("Don't worry! You'll get em' next turn")
             
         elif enemy.friendly_board.board[row, column] in [' M ', ' H ']:
             print("You have already struck here. Please select a new location")
@@ -121,6 +123,7 @@ class Player():
     def Turn(self, enemy):
         self.display_friendly_board()
         self.display_target_board()
+
 
     def display_ships(self):
         for ship in self.ships.values():
@@ -140,3 +143,14 @@ class Player():
                     # Properly access the board using tuple indexing
                     self.friendly_board.board[coordinates] = '   '  # Reset the position to the original state
         self.ships = {}  # Reset the ships dictionary
+
+    def check_all_ships_hit(self):
+        all_hit = True
+        for positions in self.ships.items():
+            for position in positions:
+                if self.friendly_board.board[position] != ' H ':
+                    all_hit = False
+                    break
+            if not all_hit:
+                break
+        return all_hit
