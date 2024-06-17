@@ -1,18 +1,16 @@
 # Imports 
 import HelperFunctionsGame as HFG
 import numpy as np
-import pprint
-class Battleship_Board():
+class Battleship_Board(): # sets up the battleship board so that each instance of the board has a certain size and is labeled appropriately 
     
-    def __init__(self, state):
-        self.state = state
+    def __init__(self):
         self.board = np.full((11, 11), '   ')
         self.board[0, 1:] = np.array([f'{i}  ' if i < 10 else f'{i} ' for i in range(1, 11)])
         self.board[1:, 0] = HFG.letter_labels
-        self.board[0, 0] = ''
+        self.board[0, 0] = '' # for readability purposed the top left corner of the board is set to no space (does not impact functions)
     
-    def __repr__(self):
-        return f"\n{np.array2string(self.board, separator=' ')}\nThis is an {self.state} battleship board."
+    def __repr__(self): # every time the board is printed the following will print along with it to give whether it is currently in use
+        return f"\n{np.array2string(self.board, separator=' ')}\nThis is an battleship board."
 
 # Defines the types of ships available in the game
 class Ship():
@@ -46,11 +44,11 @@ class Player():
         self.name = name 
         self.num_ships = num_ships
         self.ships = ships if ships is not None else {}
-        self.friendly_board = Battleship_Board('Active')
-        self.target_board = Battleship_Board('Active')
+        self.friendly_board = Battleship_Board()
+        self.target_board = Battleship_Board()
     
     def __repr__(self):
-        return f"Your player name is {self.name}. You have an {self.friendly_board.state} friendly board and an {self.target_board.state} target board. You currently have {self.num_ships} ships remaining. They are as follows: {self.ships}"
+        return f"Your player name is {self.name}. You have a friendly board that displays your ships and ship placement and a target board that displays where you have struck on the enemies board. You currently have {self.num_ships} ships remaining. They are as follows: {self.ships}"
     
     def display_friendly_board(self):
         print("This is your friendly board: \n", self.friendly_board.board ,"\n")
@@ -119,11 +117,6 @@ class Player():
             
         elif enemy.friendly_board.board[row, column] in [' M ', ' H ']:
             print("You have already struck here. Please select a new location")
-    
-    def Turn(self, enemy):
-        self.display_friendly_board()
-        self.display_target_board()
-
 
     def display_ships(self):
         for ship in self.ships.values():

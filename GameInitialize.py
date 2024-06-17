@@ -3,8 +3,10 @@ from HelperFunctionsGame import multiple_choice, check_orientations, clear_scree
 user_name_1 = input("Hello welcome to my Battleship Terminal Game, to start please enter Player 1 name: ")
 user_name_2 = input("Hello welcome to my Battleship Terminal Game, to start please enter Player 2 name: ")
 
+# Creates two players (player 1 and 2) each with their own
 player_1 = GSP.Player(user_name_1)
 player_2 = GSP.Player(user_name_2)
+
 ships = ['Carrier', 'Battleship', 'Cruiser', 'Submarine', 'Destroyer']
 players = [player_1, player_2]
 for player in players:
@@ -16,23 +18,15 @@ for player in players:
             ship_choice = multiple_choice(f"Which ship would you like to place {player.name}: ", ships_available)
             ships_available.remove(ship_choice)
             new_ship = GSP.create_ship(ship_choice)
-            valid_position = False
-            
-            while not valid_position:
-                user_within_bounds = False
+            user_within_bounds = False
                 
-                while user_within_bounds == False:
-                    try: 
-                        start_position = input("Which position on the board would you like to place it: ")
-                        start_coord = label_to_coord(start_position)
-                        user_within_bounds = True
-                    except ValueError as e:
-                        print(e)
-                        
-                if (1 <= start_coord[0] <= 10) and (1 <= start_coord[1] <= 10):
-                    valid_position = True
-                else:
-                    print("Invalid position. Please enter a valid position that is on the board")
+            while user_within_bounds == False:
+                try: 
+                    start_position = input("Which position on the board would you like to place it: ")
+                    start_coord = label_to_coord(start_position)
+                    user_within_bounds = True
+                except ValueError as e:
+                    print(e)
             
             orientations = check_orientations(new_ship.size, start_position)
             chosen_orientation = multiple_choice("In which orientation would you like to place the ship: ", orientations)
