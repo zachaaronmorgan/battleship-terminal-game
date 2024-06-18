@@ -26,11 +26,11 @@ class Ship():
 
 def create_ship(ship_type):
     ships = {
-        'carrier': ('Carrier', 5, 'Functional', ' S '),
-        'battleship': ('Battleship', 4, 'Functional', ' S '),
-        'cruiser': ('Cruiser', 3, 'Functional', ' S '),
+        'carrier': ('Carrier', 5, 'Functional', ' A '),
+        'battleship': ('Battleship', 4, 'Functional', ' B '),
+        'cruiser': ('Cruiser', 3, 'Functional', ' C '),
         'submarine': ('Submarine', 3, 'Functional', ' S '),
-        'destroyer': ('Destroyer', 2, 'Functional', ' S ')
+        'destroyer': ('Destroyer', 2, 'Functional', ' D ')
     }
     
     if ship_type.lower() in ships:
@@ -99,7 +99,7 @@ class Player():
             self.friendly_board.board[row, column-ship.size+1:column+1] = ship.s
             positions = [(row, column-i) for i in range(ship.size)]
             
-        self.ships[ship] = positions
+        self.ships[type_ship] = positions
 
     
     def strike(self, enemy, location):
@@ -119,23 +119,25 @@ class Player():
             print("You have already struck here. Please select a new location")
 
     def display_ships(self):
-        for ship in self.ships.values():
-            print(ship)
+        for ship_type, ship_coordinates in self.ships.items():
+            print(f"{ship_type}: {ship_coordinates}")
             
-    def get_ship_coordinates(self):
-        ship_coordinates = {1: [],2: [],3: [],4: [],5: []}
-        for key, ship in zip(ship_coordinates.keys(), self.ships.values()):
-            ship_coordinates[key] = ship
-        return ship_coordinates
+    def get_ship_coordinates(self, ship_type):
+        return self.ships[ship_type]
     
-    def remove_ships(self):
-        ship_coord = self.get_ship_coordinates()  # Retrieve ship coordinates
-        for coordinates_list in ship_coord.values():  # Loop over each list in the dictionary values
-            for coordinates in coordinates_list:  # Loop over each tuple in the list
-                if isinstance(coordinates, tuple) and len(coordinates) == 2:
-                    # Properly access the board using tuple indexing
-                    self.friendly_board.board[coordinates] = '   '  # Reset the position to the original state
-        self.ships = {}  # Reset the ships dictionary
+    def remove_ship(self, ship_type):
+        ship_coord_l = self.get_ship_coordinates(ship_type)  # Retrieve ship coordinates
+        for r, c in ship_coord_l:  # Loop over each list in the dictionary values
+            self.friendly_board.board[r,c] = '   '  # Reset the position to the original state
+        self.ships[ship_type] = None  # Reset the the specific value for that ship type 
+
+    def remove_all_ships(self):
+        ship_coord = self.ships.values()
+        for coordinates_list in ship_coord:
+            for coordinate in coordinates_list:
+                for r, c in coordinate:
+                    self.friendly_board[r,c] = '   '
+        self.ships = {}
 
     def check_all_ships_hit(self):
         all_hit = True
