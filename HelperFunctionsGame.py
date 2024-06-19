@@ -3,18 +3,10 @@
 import string
 import numpy as np
 import os
-import platform
 
 # run when you want the terminal to be clean for readability (multiplatform)
 def clear_screen():
-    if os.name == 'nt':
-        
-        if 'MINGW' in platform.system() or 'CYGWIN' in platform.system():
-            os.system('clear')  
-        else:
-            os.system('cls')  
-    else:
-        os.system('clear')  
+    os.system('cls' if os.name == 'nt' else 'clear')
 
 # sets up number and letter labels for board where the letters represent each row and the numbers the columns
 letter_labels = np.array(list(string.ascii_uppercase[:10])) 
