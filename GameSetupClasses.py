@@ -121,9 +121,9 @@ class Player():
     def display_ships(self):
         for ship_type, ship_coordinates in self.ships.items():
             print(f"{ship_type}: {ship_coordinates}")
-            
-    def get_ship_coordinates(self, ship_type):
-        return self.ships[ship_type]
+    
+    def get_all_ships_coord(self):
+        return self.ships.values()
     
     def remove_ship(self, ship_type):
         ship_coord_l = self.get_ship_coordinates(ship_type)  # Retrieve ship coordinates
@@ -133,10 +133,9 @@ class Player():
 
     def remove_all_ships(self):
         ship_coord = self.ships.values()
-        for coordinates_list in ship_coord:
-            for coordinate in coordinates_list:
-                for r, c in coordinate:
-                    self.friendly_board[r,c] = '   '
+        for coord in ship_coord:
+            for r, c in coord:
+                self.friendly_board.board[r,c] = '   '
         self.ships = {}
 
     def check_all_ships_hit(self):
