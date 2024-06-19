@@ -22,7 +22,7 @@ class Ship():
         self.health = size
 
     def __repr__(self):
-        return f"The symbol for this ship is {self.s}" 
+        return f"The symbol for this ship is {self.s} and it has a maximum health of {self.size}" 
 
 def create_ship(ship_type):
     ships = {
@@ -51,10 +51,10 @@ class Player():
         return f"Your player name is {self.name}. You have a friendly board that displays your ships and ship placement and a target board that displays where you have struck on the enemies board. You currently have {self.num_ships} ships remaining. They are as follows: {self.ships}"
     
     def display_friendly_board(self):
-        print("This is your friendly board: \n", self.friendly_board.board ,"\n")
+        print(f"This is {self.name}'s friendly board: \n", self.friendly_board.board ,"\n")
     
     def display_target_board(self):
-        print("This is your target board: \n", self.target_board.board ,"\n")
+        print(f"This is {self.name}'s target board: \n", self.target_board.board ,"\n")
         
     def is_occupied(self, size, start_position, orientation):
         row, column = HFG.label_to_coord(start_position)
@@ -104,8 +104,8 @@ class Player():
     
     def strike(self, enemy, location):
         row, column = HFG.label_to_coord(location)
-        
-        if enemy.friendly_board.board[row, column] == ' S ':
+        ship_symbols = [' A ', ' B ', ' C ', ' S ', ' D ']
+        if enemy.friendly_board.board[row, column] in ship_symbols:
             enemy.friendly_board.board[row, column] = ' H '
             self.target_board.board[row, column] = ' H '
             print("Nice you hit a ship!")
@@ -121,6 +121,9 @@ class Player():
     def display_ships(self):
         for ship_type, ship_coordinates in self.ships.items():
             print(f"{ship_type}: {ship_coordinates}")
+            
+    def get_ship_coordinates(self, ship_type):
+        return self.ships[ship_type]
     
     def get_all_ships_coord(self):
         return self.ships.values()
@@ -138,13 +141,24 @@ class Player():
                 self.friendly_board.board[r,c] = '   '
         self.ships = {}
 
-    def check_all_ships_hit(self):
-        all_hit = True
-        for positions in self.ships.items():
-            for position in positions:
-                if self.friendly_board.board[position] != ' H ':
-                    all_hit = False
-                    break
-            if not all_hit:
-                break
-        return all_hit
+    def check_ship_destroyed(self, ship_type):
+        ship_coord_l = self.get_ship_coordinates(ship_type)
+        spots_hit = []
+        for r,c in ship_coord_l:
+            if self.friendly_board.board[r,c] == ' H ':
+                spots_hit.append((r,c))
+        if len(spots_hit) == len(ship_coord_l):
+            return True
+        else:
+            return False
+    
+    def check_all_ships_destroyed(self):
+        is_destroyed = []
+        for ship in self.ships:
+            if self.check_ship_destroyed(ship):
+                is_destroyed.append(ship)
+        if len(is_destroyed) == len(self.ships):
+            return True
+        else:
+            return False
+            
