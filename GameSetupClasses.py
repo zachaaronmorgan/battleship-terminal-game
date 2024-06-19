@@ -114,9 +114,7 @@ class Player():
             enemy.friendly_board.board[row,column] = ' M '
             self.target_board.board[row, column] = ' M '
             print("Don't worry! You'll get em' next turn")
-            
-        elif enemy.friendly_board.board[row, column] in [' M ', ' H ']:
-            return False
+
 
     def display_ships(self):
         for ship_type, ship_coordinates in self.ships.items():
