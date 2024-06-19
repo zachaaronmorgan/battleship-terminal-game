@@ -116,7 +116,7 @@ class Player():
             print("Don't worry! You'll get em' next turn")
             
         elif enemy.friendly_board.board[row, column] in [' M ', ' H ']:
-            print("You have already struck here. Please select a new location")
+            return False
 
     def display_ships(self):
         for ship_type, ship_coordinates in self.ships.items():
@@ -141,7 +141,7 @@ class Player():
                 self.friendly_board.board[r,c] = '   '
         self.ships = {}
 
-    def check_ship_destroyed(self, ship_type):
+    def ship_destroyed(self, ship_type):
         ship_coord_l = self.get_ship_coordinates(ship_type)
         spots_hit = []
         for r,c in ship_coord_l:
@@ -152,10 +152,10 @@ class Player():
         else:
             return False
     
-    def check_all_ships_destroyed(self):
+    def all_ships_destroyed(self):
         is_destroyed = []
         for ship in self.ships:
-            if self.check_ship_destroyed(ship):
+            if self.ship_destroyed(ship):
                 is_destroyed.append(ship)
         if len(is_destroyed) == len(self.ships):
             return True
