@@ -5,7 +5,7 @@ class Battleship_Board(): # sets up the battleship board so that each instance o
     
     def __init__(self):
         self.board = np.full((11, 11), '   ')
-        self.board[0, 1:] = np.array([f'{i}  ' if i < 10 else f'{i} ' for i in range(1, 11)])
+        self.board[0, 1:] = np.array([f' {i} ' if i < 10 else f'{i} ' for i in range(1, 11)])
         self.board[1:, 0] = HFG.letter_labels
         self.board[0, 0] = '' # for readability purposed the top left corner of the board is set to no space (does not impact functions)
     
@@ -40,10 +40,11 @@ def create_ship(ship_type):
     raise ValueError("Unknown ship type")
 
 class Player():
-    def __init__(self, name, num_ships=5, ships=None):
+    def __init__(self, name, num_ships=5, ships=None, ships_destroyed=None):
         self.name = name 
         self.num_ships = num_ships
         self.ships = ships if ships is not None else {}
+        self.ships_destroyed = ships_destroyed if ships_destroyed is not None else []
         self.friendly_board = Battleship_Board()
         self.target_board = Battleship_Board()
     
@@ -106,13 +107,13 @@ class Player():
         row, column = HFG.label_to_coord(location)
         ship_symbols = [' A ', ' B ', ' C ', ' S ', ' D ']
         if enemy.friendly_board.board[row, column] in ship_symbols:
-            enemy.friendly_board.board[row, column] = ' H '
-            self.target_board.board[row, column] = ' H '
+            enemy.friendly_board.board[row, column] = ' X '
+            self.target_board.board[row, column] = ' X '
             print("Nice you hit a ship!")
             
         elif enemy.friendly_board.board[row, column] == '   ':
-            enemy.friendly_board.board[row,column] = ' M '
-            self.target_board.board[row, column] = ' M '
+            enemy.friendly_board.board[row,column] = ' O '
+            self.target_board.board[row, column] = ' O '
             print("Don't worry! You'll get em' next turn")
 
 
@@ -138,25 +139,32 @@ class Player():
             for r, c in coord:
                 self.friendly_board.board[r,c] = '   '
         self.ships = {}
-
-    def ship_destroyed(self, ship_type):
+    
+    def ship_destroyed(self, ship_type):            #Refers to whoever's ship it is 
         ship_coord_l = self.get_ship_coordinates(ship_type)
         spots_hit = []
-        for r,c in ship_coord_l:
-            if self.friendly_board.board[r,c] == ' H ':
+        for r, c in ship_coord_l:
+            if self.friendly_board.board[r,c] == ' X ':
                 spots_hit.append((r,c))
-        if len(spots_hit) == len(ship_coord_l):
-            return True
-        else:
-            return False
-    
-    def all_ships_destroyed(self):
-        is_destroyed = []
-        for ship in self.ships:
-            if self.ship_destroyed(ship):
-                is_destroyed.append(ship)
-        if len(is_destroyed) == len(self.ships):
-            return True
-        else:
-            return False
+            else:
+                pass
             
+        return len(spots_hit) == len(ship_coord_l)
+    
+    def all_ships_destroyed(self, enemy):
+        destroyed_ships = []
+        for ship in self.ships.keys():
+            if self.ship_destroyed(ship):
+                if ship not in destroyed_ships:
+                    destroyed_ships.append(ship)
+                else:
+                    pass
+            else:
+                pass
+        enemy.ships_destroyed = destroyed_ships
+        
+        return len(destroyed_ships) == len(self.ships)
+
+
+    def display_ships_destroyed(self):
+        print(f"{self.name} you have destroyed the following enemy ships: {self.ships_destroyed}")

@@ -1,5 +1,6 @@
 import GameSetupClasses as GSP
 from HelperFunctionsGame import multiple_choice, check_orientations, clear_screen, label_to_coord
+import time
 user_name_1 = input("Hello welcome to my Battleship Terminal Game, to start please enter Player 1 name: ")
 user_name_2 = input("Hello welcome to my Battleship Terminal Game, to start please enter Player 2 name: ")
 
@@ -13,6 +14,9 @@ for player in players:
     while True:
         ships_available = ships.copy()
         clear_screen()
+        
+        time.sleep(1)
+        player.display_friendly_board()
         
         for ship in ships:
             ship_choice = multiple_choice(f"Which ship would you like to place {player.name}: ", ships_available)
@@ -132,25 +136,27 @@ while is_running:
         clear_screen()
         enemy = players[1] if player == players[0] else players[0]
         print(f"It is {player.name}'s turn!")
+        player.display_ships_destroyed()
+        
         player.display_friendly_board()
         player.display_target_board()
         
         user_within_bounds = False 
         while user_within_bounds == False:
-            try: 
+            try:
                 strike_location = input("Which position on the board would you like to strike: ")
                 strike_coord = label_to_coord(strike_location)
                 user_within_bounds = True
             except ValueError as e:
                 print(e)
         
-        if player.target_board.board[strike_coord] in [' M ', ' H ']:
+        if player.target_board.board[strike_coord] in [' O ', ' X ']:
             user_within_bounds = False 
             while user_within_bounds == False:
                 try: 
                     strike_location = input("You have already struck at this location please select a new location: ")
                     strike_coord = label_to_coord(strike_location)
-                    if player.target_board.board[strike_coord] in [' M ', ' H ']:
+                    if player.target_board.board[strike_coord] in [' O ', ' X ']:
                         continue
                     else:
                         user_within_bounds = True
@@ -159,13 +165,18 @@ while is_running:
         else:
             player.strike(enemy, strike_location)
                             
-        player.strike(enemy, strike_location)
-    
-    if enemy.all_ships_destroyed():
-        player.display_friendly_board()
-        enemy.display_friendly_board()
-        is_running = False
-        print(f"The winner is {player.name}!")
-    else:
-        continue
+        # player.strike(enemy, strike_location)
+        player.display_target_board()
+        
+        print(enemy.name)
+        if enemy.all_ships_destroyed(player):
+            player.display_friendly_board()
+            enemy.display_friendly_board()
+            print(f"The winner is {player.name}!")
+            is_running = False
+            break  # Exit the loop since the game is over
+        else:
+            player.display_ships_destroyed()
+            player.display_friendly_board()
+            enemy.display_friendly_board()
 
