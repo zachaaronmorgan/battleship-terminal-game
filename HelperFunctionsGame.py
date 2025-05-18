@@ -4,9 +4,53 @@ import numpy as np
 import os
 import inquirer
 
+from rich.console import Console
+from rich.panel import Panel
+from rich.text import Text
+
+def greet():
+    console = Console()
+
+    title = Text()
+    title.append("BATTLEGRID", style="bold blue")
+    title.append(" — Terminal Edition", style="blue")
+
+    CELL_WIDTH = 6  # wider than original 4
+
+
+    # Build the number header line
+    number_line = " " * 2 + "".join(f"{i:^{CELL_WIDTH}}" for i in range(1, 11))
+
+
+
+
+    # Grid borders
+    top_border = " ┌" + ("─" * (CELL_WIDTH - 1) + "┬") * 9 + "─" * (CELL_WIDTH - 1) + "┐"
+    mid_border = " ├" + ("─" * (CELL_WIDTH - 1) + "┼") * 9 + "─" * (CELL_WIDTH - 1) + "┤"
+    bottom_border = " └" + ("─" * (CELL_WIDTH - 1) + "┴") * 9 + "─" * (CELL_WIDTH - 1) + "┘"
+
+
+    # Build the lettered rows with separating lines
+    rows = ""
+    for index, letter in enumerate("ABCDEFGHIJ"):
+        rows += f"{letter}│" + (" " * (CELL_WIDTH - 1) + "│") * 10 + "\n"
+        if index < 9:
+            rows += mid_border + "\n"
+
+
+    grid = f"{number_line}\n{top_border}\n{rows}{bottom_border}"
+    console.print(Panel(grid, title=title, border_style="blue", padding=0, width=len(max(grid.splitlines(), key=len)) + 2))
+
+
+
+
+
+
 # run when you want the terminal to be clean for readability (multiplatform)
 def clear_screen():
     os.system('cls' if os.name == 'nt' else 'clear')
+
+
 
 # sets up number and letter labels for board where the letters represent each row and the numbers the columns
 letter_labels = np.array(list(string.ascii_uppercase[:10])) 
@@ -79,18 +123,3 @@ def get_user_input(message):
         return get_user_input(message)
     else:
         return answer.strip().lower()
-    
-def greet():
-    print("""Hello! Welcome to my battleship terminal game!
-            1  2  3  4  5  6  7  8  9  10
-          A|  |  |  |  |  |  |  |  |  |  | 
-          B|  |  |  |  |  |  |  |  |  |  |
-          C|  |  |  |  |  |  |  |  |  |  |
-          D|  |  |  |  |  |  |  |  |  |  |
-          E|  |  |  |  |  |  |  |  |  |  |
-          F|  |  |  |  |  |  |  |  |  |  |
-          G|  |  |  |  |  |  |  |  |  |  |
-          H|  |  |  |  |  |  |  |  |  |  | 
-          I|  |  |  |  |  |  |  |  |  |  |
-          J|  |  |  |  |  |  |  |  |  |  |\n""")
-
